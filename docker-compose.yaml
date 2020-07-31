@@ -1,0 +1,22 @@
+version: "3.3"
+
+services:
+  api:
+    image: "hdespaigne/spring-docker-github-ci-heroku-cd-example-java:latest"
+    container_name: spring-docker-github-ci-heroku-cd-example-java
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - 5000:8080
+    #With delegated we are copying all content of the current
+    #project to /app folder into the container
+    volumes:
+      - .:/app:delegated
+    #The environment variables are stored in .env file
+    #located in the src/main/resources folder
+    env_file:
+      - .env
+    tty: true
+    entrypoint: ["./gradlew", ":run"]
